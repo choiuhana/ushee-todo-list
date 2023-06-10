@@ -8,7 +8,8 @@ import { PersistGate } from "redux-persist/integration/react";
 import dark_theme from "./src/resource/theme/dark";
 import light_theme from "./src/resource/theme/light";
 import store from "./src/script/redux/store";
-import {BroadcastContextProvider} from "@choiuhana/library-react-base";
+import { BroadcastContextProvider } from "@choiuhana/library-react-base";
+import { PaperProvider } from "react-native-paper";
 
 const Root = () => {
     const is_dark_mode = useColorScheme() === "dark";
@@ -19,13 +20,15 @@ const Root = () => {
         <BroadcastContextProvider>
             <Provider store={store}>
                 <PersistGate loading={null} persistor={persist}>
-                    <NavigationContainer
-                        onReady={() => {
-                            // Log.private('NavigationContainer ready');
-                        }}
-                        theme={is_dark_mode ? dark_theme : light_theme}>
-                        <App />
-                    </NavigationContainer>
+                    <PaperProvider>
+                        <NavigationContainer
+                            onReady={() => {
+                                // Log.private('NavigationContainer ready');
+                            }}
+                            theme={is_dark_mode ? dark_theme : light_theme}>
+                            <App />
+                        </NavigationContainer>
+                    </PaperProvider>
                 </PersistGate>
             </Provider>
         </BroadcastContextProvider>
