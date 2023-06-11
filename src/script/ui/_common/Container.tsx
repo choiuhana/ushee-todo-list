@@ -2,6 +2,7 @@ import React, { ReactNode, useCallback, useMemo } from "react";
 import { ScrollView, StyleProp, useWindowDimensions, ViewProps, ViewStyle } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import DefaultView from "./Default/DefaultView";
+import {normalize} from "../../../common/utils";
 
 interface Props extends ViewProps {
     style?: StyleProp<ViewStyle> | undefined;
@@ -48,7 +49,7 @@ const Container = (props: Props) => {
                 {...props}
                 style={[
                     style,
-                    { maxWidth: 504, width: "100%" },
+                    { maxWidth: normalize(504), width: "100%" },
                     {
                         ...(center && { alignItems: "center", justifyContent: "center" }),
                         backgroundColor: backgroundColor || colors.background,
