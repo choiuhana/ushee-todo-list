@@ -1,5 +1,4 @@
-import { Dimensions, FlexStyle, StyleProp, StyleSheet, TextStyle, ViewStyle } from "react-native";
-import { ImageStyle } from "react-native/Libraries/StyleSheet/StyleSheetTypes";
+import {Dimensions, StyleProp, StyleSheet} from "react-native";
 
 export const normalize = (size: number) => {
     const { width } = Dimensions.get("window");
