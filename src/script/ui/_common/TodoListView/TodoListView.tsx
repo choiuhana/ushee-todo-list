@@ -14,8 +14,9 @@ const TodoListView = (props: ITodoListView) => {
 
     return (
         <>
-            <AnimationButtonCheck />
-            <DefaultMediumText style={styles.titleText}>{title}</DefaultMediumText>
+            <AnimationButtonCheck>
+                <DefaultMediumText style={styles.titleText}>{title}</DefaultMediumText>
+            </AnimationButtonCheck>
         </>
     );
 };

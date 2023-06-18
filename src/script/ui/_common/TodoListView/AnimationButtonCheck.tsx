@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Animated, PanResponder, StyleSheet, View } from "react-native";
 import AnimatedLottieView from "lottie-react-native";
 import { lerp } from "@choiuhana/library-react-base/dist/math/MathUtils";
@@ -32,6 +32,7 @@ const AnimationButtonCheck = (props: IAnimationCheck) => {
 
             onPanResponderGrant: (evt, gestureState) => {
                 if (value.current !== 0) {
+                    setScaleValue(0.95);
                     start({
                         data: {
                             from: value.current,
@@ -66,6 +67,7 @@ const AnimationButtonCheck = (props: IAnimationCheck) => {
     const { start: resetStart } = useTimingFunction(300, 120);
 
     const reset = () => {
+        setScaleValue(1);
         if (value.current === 0) return;
         stop();
         resetStart({
@@ -80,14 +82,22 @@ const AnimationButtonCheck = (props: IAnimationCheck) => {
         });
     };
 
+    const [scaleValue, setScaleValue] = useState(1);
+
     return (
         <>
-            <View {...panResponder.panHandlers}>
+            <View style={{ borderWidth: 1 }} {...panResponder.panHandlers}>
                 <AnimatedLottieView
                     source={require("../../../../resource/animation/check-mark.json")}
                     progress={animationProgress.current}
-                    style={styles.check}
+                    style={[
+                        styles.check,
+                        {
+                            transform: [{ scale: scaleValue }],
+                        },
+                    ]}
                 />
+                {props.children}
             </View>
         </>
     );
@@ -97,6 +107,7 @@ const styles = StyleSheet.create({
     check: {
         width: 120,
         height: 120,
+        borderWidth:1,
     },
 });
 
