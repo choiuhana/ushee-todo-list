@@ -1,4 +1,4 @@
-import {Dimensions, StyleProp, StyleSheet} from "react-native";
+import { Dimensions, StyleProp, StyleSheet } from "react-native";
 
 export const normalize = (size: number) => {
     const { width } = Dimensions.get("window");
@@ -32,7 +32,7 @@ export const createNormalStyles = <T extends Record<string, StyleProp<any>>>(
         "height",
         "lineHeight",
     ]
-) => {
+): T => {
     const normalizedStyles: Record<string, StyleProp<any>> = {};
     Object.keys(styles).forEach((key) => {
         normalizedStyles[key] = {} as StyleProp<any>;
@@ -45,5 +45,5 @@ export const createNormalStyles = <T extends Record<string, StyleProp<any>>>(
         });
     });
 
-    return StyleSheet.create(normalizedStyles);
+    return StyleSheet.create(normalizedStyles) as T;
 };

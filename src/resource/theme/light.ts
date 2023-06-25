@@ -8,7 +8,7 @@ const light_theme: I_useTheme = {
   colors: {
     ...color_source.light,
     typo: {
-      title: color_source.neutral[0],
+      title: color_source.neutral[20],
       body: color_source.neutral[40],
       caption: color_source.neutral[50],
     },

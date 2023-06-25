@@ -1,22 +1,38 @@
-import React, { useRef, useState } from "react";
-import { Animated, PanResponder, StyleSheet, View } from "react-native";
+import React, { ReactElement, useRef, useState } from "react";
+import { Animated, PanResponder, StyleProp, TextStyle, View, ViewStyle } from "react-native";
 import AnimatedLottieView from "lottie-react-native";
 import { lerp } from "@choiuhana/library-react-base/dist/math/MathUtils";
 import { easeOutQuart } from "@choiuhana/library-react-base/dist/math/TimingFunctions";
 import { useTimingFunction } from "../../../../common/hooks";
+import { createNormalStyles } from "../../../../common/utils";
+import DefaultMediumText from "../Default/DefaultMediumText";
+import { useTheme } from "@react-navigation/native";
+import { I_useTheme } from "../../../../resource/theme/theme";
 
 interface IAnimationCheck {
     isChecked?: boolean;
+    text: string;
+}
+
+interface IStyle {
+    container: StyleProp<ViewStyle>;
+    check: StyleProp<ViewStyle>;
+    textWrap: StyleProp<ViewStyle>;
+    text: StyleProp<TextStyle>;
 }
 
 const AnimationButtonCheck = (props: IAnimationCheck) => {
-    const { isChecked } = props;
+    const { isChecked, text } = props;
     const value = useRef(0);
     const animationProgress = useRef(new Animated.Value(value.current));
+
+    const theme = useTheme();
+    const styles = createStyle(theme);
 
     // @TODO is check 구현
     const isCheck = useRef(isChecked);
 
+    // @TODO 진동
     const panResponder = React.useRef(
         PanResponder.create({
             // Ask to be the responder:
@@ -39,6 +55,7 @@ const AnimationButtonCheck = (props: IAnimationCheck) => {
                             to: 0,
                         },
                         onTiming: (t: number, data: { from: number; to: number }) => {
+                            if (t === 1) setScaleValue(1);
                             value.current = lerp(data.from, data.to, t);
                             animationProgress.current.setValue(value.current);
                         },
@@ -62,7 +79,7 @@ const AnimationButtonCheck = (props: IAnimationCheck) => {
         })
     ).current;
 
-    const { start, stop } = useTimingFunction(1500, 120, easeOutQuart);
+    const { start, stop } = useTimingFunction(1200, 120, easeOutQuart);
 
     const { start: resetStart } = useTimingFunction(300, 120);
 
@@ -85,11 +102,13 @@ const AnimationButtonCheck = (props: IAnimationCheck) => {
     const [scaleValue, setScaleValue] = useState(1);
 
     return (
-        <>
-            <View style={{ borderWidth: 1 }} {...panResponder.panHandlers}>
+        // @TODO HStack
+        <View {...panResponder.panHandlers} style={styles.container}>
+            <View>
                 <AnimatedLottieView
                     source={require("../../../../resource/animation/check-mark.json")}
                     progress={animationProgress.current}
+                    resizeMode={"contain"}
                     style={[
                         styles.check,
                         {
@@ -97,18 +116,44 @@ const AnimationButtonCheck = (props: IAnimationCheck) => {
                         },
                     ]}
                 />
-                {props.children}
             </View>
-        </>
+            <View
+                style={[
+                    styles.textWrap,
+                    {
+                        transform: [{ scale: scaleValue }],
+                    },
+                ]}>
+                <DefaultMediumText numberOfLines={1} style={styles.text}>
+                    {text}
+                </DefaultMediumText>
+            </View>
+        </View>
     );
 };
 
-const styles = StyleSheet.create({
-    check: {
-        width: 120,
-        height: 120,
-        borderWidth:1,
-    },
-});
-
+const createStyle = (theme: I_useTheme): IStyle => {
+    return createNormalStyles<IStyle>({
+        container: {
+            flexDirection: "row",
+            paddingTop: 8,
+        },
+        check: {
+            width: 45,
+            height: 45,
+            marginRight: -6,
+        },
+        textWrap: {
+            flex: 1,
+            justifyContent: "center",
+            marginRight: 24,
+            borderBottomWidth: 1,
+            borderColor: theme.colors.surface_variant,
+        },
+        text: {
+            fontSize: 18,
+            color: theme.colors.typo.title,
+        },
+    });
+};
 export default AnimationButtonCheck;
